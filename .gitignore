@@ -1,4 +1,6 @@
 node_modules/
-dist/
-my-test/
 yarn-error.log
+.env
+dist/
+config/*
+!config/example.env.js

@@ -8,18 +8,26 @@
     "author": "drtob",
     "license": "MIT",
     "scripts": {
-        "start": "npm run serve",
-        "serve": "node dist/server.js",
+        "start": "node src/server.js",
+        "start:dev": "yarn build:dev && nodemon dist/server.js",
+        "start:debug": "yarn build:dev && concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"yarn watch-ts\" \"nodemon --inspect dist/server.js\"",
+        "env:set": "./scripts/environment/set-env.sh",
+        "build:dev": "yarn env:set -- dev && tsc",
+        "build:staging": "yarn env:set -- staging && tsc",
+        "build:prod": "yarn env:set -- prod && tsc",
         "watch-node": "nodemon dist/server.js",
-        "watch": "npm run watch-ts",
-        "build-ts": "tsc",
-        "watch-ts": "tsc -w",
-        "copy-static-assets": "ts-node copyStaticAssets.ts",
-        "serve-debug": "node --inspect dist/server.js"
-    },
+        "watch-ts": "yarn env:set -- dev && tsc -w",
+        "watch": "yarn build:dev && concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"yarn watch-ts\" \"yarn watch-node\"",
+        
+            "serve-debug": "nodemon --inspect dist/server.js",
+            "watch-debug": "concurrently -k -p \"[{name}]\" -n \"Sass,TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"yarn watch-ts\" \"yarn serve-debug\""
+
+        },
     "dependencies": {
+        "@hapi/joi": "^17.1.0",
         "body-parser": "^1.19.0",
         "compression": "^1.7.4",
+        "concurrently": "^5.1.0",
         "dotenv": "^8.2.0",
         "errorhandler": "^1.5.1",
         "express": "^4.17.1",
@@ -33,6 +41,7 @@
         "@types/compression": "^1.0.1",
         "@types/errorhandler": "^0.0.32",
         "@types/express": "^4.17.1",
+        "@types/hapi__joi": "^16.0.8",
         "@types/lodash": "^4.14.141",
         "@types/lusca": "^1.6.1",
         "@types/mongoose": "^5.5.18",
@@ -40,6 +49,6 @@
         "@types/shelljs": "^0.8.5",
         "shelljs": "^0.8.3",
         "ts-node": "^8.4.1",
-        "typescript": "^3.6.3"
+        "typescript": "^3.7.5"
     }
 }
