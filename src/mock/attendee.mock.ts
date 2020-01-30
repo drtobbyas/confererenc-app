@@ -1,4 +1,3 @@
-
 export const attendee = {
   firstName: 'segun',
   lastName: 'olabode',
@@ -8,4 +7,4 @@ export const attendee = {
   address: '2, Ladipo Street, Mushin, Lagos',
   attended: ['5e307772cf30491bd87cbe0e'],
   attending: ['5e30b9dff74e8f31fb22d6f4'],
-}
+};

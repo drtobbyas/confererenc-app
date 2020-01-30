@@ -2,18 +2,19 @@ import mongoose from 'mongoose';
 // @ts-ignore
 import { MONGODB_URL } from '../../config';
 
-mongoose.connect(MONGODB_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true,
-});
+export const connectMongo = () => {
 
-const connectMongo = mongoose.connection;
-connectMongo.on('error', (error) => {
+  mongoose.connect(MONGODB_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+  });
+}
+
+const connection = mongoose.connection;
+connection.on('error', (error) => {
   console.log(`MongoDB database connection error: ${error}`);
 });
-connectMongo.once('open', function() {
+connection.once('open', function() {
   console.log('MongoDB database connection opened successfully.');
 });
-
-

@@ -1,17 +1,17 @@
-import { Schema, model, SchemaDefinition } from "mongoose";
+import { Schema, model } from 'mongoose';
 
 const attendeeSchema = new Schema({
   firstName: String,
   lastName: String,
   email: {
     type: String,
-    unique: true
+    unique: true,
   },
   phone: String,
   dob: Date,
   address: String,
   attended: [String],
-  attending: [String]
+  attending: [String],
 });
 
-export const Attendee = model("Attendee", attendeeSchema);
+export const Attendee = model('Attendee', attendeeSchema);
