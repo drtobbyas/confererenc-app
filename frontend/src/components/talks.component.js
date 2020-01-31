@@ -7,6 +7,8 @@ import {
   ExpansionPanelSummary,
   ExpansionPanelDetails,
   Typography,
+  Snackbar,
+  Button,
   Box,
   TextareaAutosize,
   TextField,
@@ -23,13 +25,14 @@ const useStyles = makeStyles(theme => ({
   //   display: "flex",
   //   justifyContent: "center"
   // },
-  list: {
+
+  root: {
     margin: theme.spacing(1),
     minWidth: 200,
-    width: 300,
-    [theme.breakpoints.up('sm')]: {
-      width: '50%'
-    }
+    width: '100%',
+    // [theme.breakpoints.up('sm')]: {
+    //   width: '50%'
+    // }
   },
   expansionPanel: {
     width: '100%',
@@ -39,6 +42,10 @@ const useStyles = makeStyles(theme => ({
       margin: theme.spacing(1),
       minWidth: 100,
       width: '100%',
+    },
+    details: {
+      display: 'flex',
+      justifyContent: 'space-between',
     }
 
 }));
@@ -49,40 +56,100 @@ export const Talks = props => {
   const [state, setState] = useState({
     talks: [
 
-    ]
+    ],
+    message: '',
+    open: false
   });
 
-  useEffect(() => {
-    const callApi = async () => {
-      try {
-        const response = await fetch(`${REACT_API_URL}/api/talks/getTalks`);
-        const res = await response.json();
-        if (res.statusCode && res.statusCode === 200) {
-          return setState({
-            ...state,
-            talks: res.data
-          });
-        }
+  const getTalks = async () => {
+    try {
+      const response = await fetch(`${REACT_API_URL}/api/talks/getTalks`);
+      const res = await response.json();
+      if (res.statusCode && res.statusCode === 200) {
         return setState({
           ...state,
-          talks: []
-        });
-
-      } catch (error) {
-        console.log(`unable to fetch data: error: ${error}`);
-       return setState({
-          ...state,
-          talks: []
+          talks: res.data.reverse()
         });
       }
-    };
+      return setState({
+        ...state,
+        talks: []
+      });
 
-    callApi();
+    } catch (error) {
+      console.log(`unable to fetch data: error: ${error}`);
+     return setState({
+        ...state,
+        talks: []
+      });
+    }
+  };
+
+
+  useEffect(() => {
+
+    getTalks();
   }, []);
+
+  const handleClose = () =>{
+    setState({
+      ...state,
+      open:false
+    })
+  }
+
+  const deleteTalk = (_id) => async (e) => {
+    e.preventDefault()
+    try {
+      const data = JSON.stringify({
+        _id: _id
+      })
+      const response = await fetch(`${REACT_API_URL}/api/talks/deleteTalk`, {
+        headers: {
+          accept: "application/json, text/plain, */*",
+          "Content-Type": "application/json"
+        },
+        method: "POST",
+        body: data
+      });
+      const res = await response.json();
+      if (res.statusCode && res.statusCode === 200) {
+        getTalks();
+        return setState({
+          ...state,
+          open: true,
+          message: 'talk deleted successfully'
+        });
+      }
+      return setState({
+        ...state,
+        open: true,
+        message: 'unable to delete talk'
+      });
+
+    } catch (error) {
+      console.log(`unable to fetch data: error: ${error}`);
+     return setState({
+        ...state,
+        open: true,
+        message: 'error deleting talk'
+      });
+    }
+  }
 
   return (
     // <Paper className={classNames(classes.root, classes.base)}>
-      <List className={classes.list}>
+      <List className={classes.root}>
+        <Snackbar
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left"
+        }}
+        open={state.open}
+        autoHideDuration={6000}
+        message={state.message}
+        onClose={handleClose}
+      />
         {state.talks.map(talk => {
           return (
             <ListItem key={talk._id}>
@@ -96,9 +163,19 @@ export const Talks = props => {
                     {talk.title}
                   </Typography>
                 </ExpansionPanelSummary>
-                <ExpansionPanelDetails>
-
+                <ExpansionPanelDetails className={classes.details}>
+                <Typography className={classes.heading}>
+                    Desctiption:
+                  </Typography>
           <Typography>{talk.description}</Typography>
+          <Button
+            variant="contained"
+            color="secondary"
+            className={classes.button}
+            onClick={deleteTalk(talk._id)}
+          >
+            Delete Talk
+          </Button>
                 </ExpansionPanelDetails>
               </ExpansionPanel>
             </ListItem>

@@ -38,7 +38,11 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center'
   },
     root: {
-      padding: 20
+      padding: 20,
+      width: '50%',
+ [theme.breakpoints.down("md")]: {
+      width: "100%"
+    }
     },
     box: {
       width: "100%",

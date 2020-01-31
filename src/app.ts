@@ -7,7 +7,7 @@ import cors from 'cors';
 import { talkRouter } from './api/talks/talk.route';
 import { attendeeRouter } from './api/attendees/attendee.route';
 // @ts-ignore
-import { MONGODB_URL, PORT } from '../config/index';
+import { PORT } from '../config/index';
 import { connectMongo } from './database/database.mongo';
 
 // Create Express server
@@ -28,11 +28,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(lusca.xframe('SAMEORIGIN'));
 app.use(lusca.xssProtection(true));
 
-app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
+app.use(express.static('public', { maxAge: 31557600000 }));
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, './public/index.html'));
-
+  res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
 app.use('/api/talks', talkRouter);

@@ -14,7 +14,12 @@ const useStyles = makeStyles(theme => ({
   header: {
     background: theme.palette.primary.main,
     color: '#f3f3f3'
+  },
+  grid: {
+    display: 'flex',
+    justifyContent: 'center'
   }
+
 }));
 const baseTheme = createMuiTheme();
 const App = () => {
@@ -26,7 +31,7 @@ const App = () => {
       </Header>
       <Content>
         <Grid container className={classes.root} spacing={2}>
-          <Grid item xs={12}>
+          <Grid item xs={12} className={classes.grid}>
             <Dashboard />
           </Grid>
 

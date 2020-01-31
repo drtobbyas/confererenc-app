@@ -16,9 +16,9 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(1),
     minWidth: 100,
     width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      width: "50%"
-    }
+    // [theme.breakpoints.up("sm")]: {
+    //   width: "50%"
+    // }
   }
 }));
 
@@ -82,7 +82,7 @@ export const AddAttendee = () => {
         return setState({
           ...state,
           open: true,
-          message: "talk added"
+          message: "talk attendee"
         });
       }
       console.log(res);
